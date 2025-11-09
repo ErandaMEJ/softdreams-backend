@@ -1,6 +1,8 @@
 import User from "../models/User.js";
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export function createUser(req,res){
 
@@ -59,12 +61,14 @@ export function loginUser(req,res){
 
                     }
 
-                    const token = jwt.sign(payload, "secretkey95@2025")
+                    const token = jwt.sign(payload, process.env.JWT_SECRET,)
                     
                     
                     res.json({
                         message: "Login Successful",
-                        token : token
+                        token : token,
+                        role : user.role
+
                     })
                 }else{
                     res.status(401).json({
@@ -78,10 +82,10 @@ export function loginUser(req,res){
     
 export function isAdmin(req){
     if(req.user == null){
-        return  false
+        return  false;
     }
     if(req.user.role != "admin"){
-        return false
+        return false;
     }
     return true
 }        

@@ -47,6 +47,8 @@ export async function getAllProducts(req,res){
         //    }
         //)
         const products = await Product.find()
+        console.log(products)
+        res.json(products)
 
     }else{
         Product.find({isAvailable : true}).then(
@@ -96,7 +98,7 @@ export function updateProduct(req,res){
         res.status(403).json({
             message : "Only Admin Can Update Products"
         })
-        return
+        return;
     }
 
     const productID = req.params.productID
@@ -122,7 +124,18 @@ export function getProductByID(req,res){
                 })
             }
             else{
-                res.json(product)
+                if(product.isAvailable){
+                     res.json(product)
+                } else{
+                    if(isAdmin(req)){
+                        res.json(product)
+                    }else{
+                        res.status(404).json({
+                            message : "Product Not Found"
+                        })
+                    }
+                }
+               
             }
         }
     ).catch(
