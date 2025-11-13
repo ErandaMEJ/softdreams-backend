@@ -47,7 +47,7 @@ export async function getAllProducts(req,res){
         //    }
         //)
         const products = await Product.find()
-        console.log(products)
+        
         res.json(products)
 
     }else{

@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema(
             type : String,
             required : true
         },
-        module : {
+        model : {
             type : String,
             required : true,
             default : "Standard"
