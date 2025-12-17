@@ -15,11 +15,11 @@ const userSchema = new mongoose.Schema(
         },
         lastName : {
             type : String,
-            requred : true
+            required : true
         },
         password : {
             type : String,
-            requied : true
+            required : true
         },
         role :{
             type : String,
@@ -33,9 +33,9 @@ const userSchema = new mongoose.Schema(
             type : Boolean,
             default : false
         },
-        image :{
+        image: {
             type : String,
-            requred : true,
+            required : true,
             default : "/default.jpg"
         }
     }
