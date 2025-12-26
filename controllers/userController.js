@@ -130,7 +130,8 @@ export async function googleLogin(req,res){
 
     console.log(req.body.token);
     try{
-        const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo",{
+        const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo",
+        {
             headers : {
                 Authorization : `Bearer ${req.body.token}`
             }
@@ -167,7 +168,7 @@ export async function googleLogin(req,res){
                     res.json({
                         message: "Login Successful",
                         token : token,
-                        role : newUser.role
+                        role : user.role
 
                     })
 
@@ -214,9 +215,10 @@ export async function googleLogin(req,res){
 export async function validateOTPAndUpdatePassword(req,res){
 
     try{
-    const email = req.body.email;
+    
     const otp = req.body.otp;
     const newPassword = req.body.newPassword;
+    const email = req.body.email;
 
     const otpRecord = await Otp.findOne({email : email, otp : otp})
     if(otpRecord == null){
