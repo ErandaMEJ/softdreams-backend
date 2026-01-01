@@ -198,7 +198,7 @@ export async function addReview(req,res){
                             return res.status(404).json({ message: "Review not found" });
                         }
 
-                        review.remove();
+                        product.reviews.pull(reviewID);
                         recalculateRating(product);
         
                         await product.save();
