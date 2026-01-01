@@ -75,7 +75,7 @@ const productSchema = new mongoose.Schema(
         },
         isAvailable : {
             type : Boolean,
-            required : true,
+            default : true,
         },
         // ⭐ Reviews + rating fields
         reviews: [reviewSchema],
