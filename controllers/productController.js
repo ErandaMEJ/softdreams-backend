@@ -1,6 +1,20 @@
 import Product from "../models/Product.js";
 import { isAdmin } from "./userController.js";
 
+// ⭐ Approved reviews and rating recalculation helper
+function recalculateRating(product) {
+  const approved = product.reviews.filter((r) => r.isApproved);
+
+  if (approved.length === 0) {
+    product.rating = 0;
+    product.numReviews = 0;
+  } else {
+    product.numReviews = approved.length;
+    product.rating =
+      approved.reduce((sum, r) => sum + r.rating, 0) / approved.length;
+  }
+}
+
 export function createProduct(req,res){
     
    if(!isAdmin(req)){
@@ -71,8 +85,138 @@ export async function getAllProducts(req,res){
             error : error,
         });
     }
-}    
-    
+}  
+
+export async function addReview(req,res){
+    try{
+        const productID = req.params.productID;
+        const { name, rating, comment } = req.body;
+
+        if (!name || !rating || !comment) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        //product search
+        const product =  await Product.findOne({ productID });
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        const review = {
+            name,
+            rating : Number(rating),
+            comment,
+            isApproved : false
+        };
+
+        // review push
+            product.reviews.push(review);
+
+          
+            await product.save();
+
+            return res.status(201).json({
+            message: "Review added successfully, pending approval",
+            
+            });
+        } catch (error) {
+            return res.status(500).json({
+            message: "Error adding review",
+            error: error.message,
+            });
+        }
+        }
+        export async function getReviewsAdmin(req,res){
+            if (!isAdmin(req)) {
+                return res.status(403).json({ message: "Only admin can view all reviews" });
+            }
+            try {
+                const productID = req.params.productID;
+                const product = await Product.findOne({ productID });
+
+                if (!product) {
+                    return res.status(404).json({ message: "Product not found" });
+                }
+
+                return res.json(product.reviews);
+            } catch (error) {
+                return res.status(500).json({
+                    message: "Error fetching reviews",
+                    error: error.message,
+                });
+            }
+        }
+        export async function approveReview(req,res){
+            if (!isAdmin(req)) {
+                return res.status(403).json({ message: "Only admin can approve reviews" });
+            }
+            try {
+                const { productID, reviewID } = req.params;
+                const product = await Product.findOne({ productID });
+
+                if (!product) {
+                    return res.status(404).json({ message: "Product not found" });
+                }
+
+                const review = product.reviews.id(reviewID);
+
+                if (!review) {
+                    return res.status(404).json({ message: "Review not found" });
+                }
+
+                review.isApproved = true;
+                recalculateRating(product);
+
+                await product.save();
+
+                return res.json({
+                    message: "Review approved successfully",
+                    rating: product.rating,
+                    numReviews: product.numReviews,
+                });
+            } catch (error) {
+                return res.status(500).json({
+                    message: "Error approving review",
+                    error: error.message,
+                });
+            }
+                };
+
+                export async function deleteReview(req,res){
+                    if (!isAdmin(req)) {
+                        return res.status(403).json({ message: "Only admin can delete reviews" });
+                    }
+                    try {
+                        const { productID, reviewID } = req.params;
+                        const product = await Product.findOne({ productID });
+        
+                        if (!product) {
+                            return res.status(404).json({ message: "Product not found" });
+                        }
+                        const review = product.reviews.id(reviewID);
+        
+                        if (!review) {
+                            return res.status(404).json({ message: "Review not found" });
+                        }
+
+                        review.remove();
+                        recalculateRating(product);
+        
+                        await product.save();
+        
+                        return res.json({
+                            message: "Review deleted successfully",
+                            rating: product.rating,
+                            numReviews: product.numReviews,
+                        });
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: "Error deleting review",
+                            error: error.message,
+                        });
+                    }
+                }
+
+
 
 export function deleteProduct(req,res){
     if(!isAdmin(req)){

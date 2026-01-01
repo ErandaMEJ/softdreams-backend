@@ -7,6 +7,9 @@ import cors from "cors"
 import dotenv from "dotenv"
 import orderRouter from "./routes/orderRouter.js"
 
+
+
+
 dotenv.config()
 
 
@@ -16,7 +19,7 @@ const mongoURI = process.env.MONGO_URI
 
 // database
 mongoose.connect(mongoURI).then(
-    ()=>{
+    () => {
         console.log("connect to mongoDB Cluster")
     }
 )
@@ -32,32 +35,32 @@ app.use(express.json())
 
 
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
 
     const authorizationHeader = req.header("Authorization")
 
-    if(authorizationHeader != null){
+    if (authorizationHeader != null) {
 
 
         const token = authorizationHeader.replace("Bearer ", "")
 
-       
 
-        jwt.verify(token, process.env.JWT_SECRET, 
-            (error, content)=>{
-                
-                if(content ==null){
 
-                   
+        jwt.verify(token, process.env.JWT_SECRET,
+            (error, content) => {
+
+                if (content == null) {
+
+
 
                     res.status(401).json({
                         message: "invalid token"
                     })
 
-                    
 
-                }else{
-                   
+
+                } else {
+
                     req.user = content
 
                     next()
@@ -66,26 +69,29 @@ app.use((req,res,next)=>{
         )
 
 
-    }else{
-        
+    } else {
+
         next()
 
     }
-    
-    
+
+
 
 })
-    
+
 
 // routes
-app.use("/api/users",userRouter)
-app.use("/api/products",productRouter)
-app.use("/api/orders",orderRouter)
+app.use("/api/users", userRouter)
+app.use("/api/products", productRouter)
+app.use("/api/orders", orderRouter)
+
+
+
 
 
 // server
-app.listen(5000 ,
-    ()=>{
+app.listen(5000,
+    () => {
         console.log("server is running")
     }
- )
+)

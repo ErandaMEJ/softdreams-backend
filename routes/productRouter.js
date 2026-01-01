@@ -1,5 +1,5 @@
 import express from "express"
-import { createProduct, deleteProduct, getAllProducts, getProductByID, searchProducts, updateProduct } from "../controllers/productController.js"
+import { addReview, approveReview, createProduct, deleteProduct, deleteReview, getAllProducts, getProductByID, getReviewsAdmin, searchProducts, updateProduct } from "../controllers/productController.js"
 
 
 const productRouter = express.Router()
@@ -22,5 +22,13 @@ productRouter.get("/:productID", getProductByID)
 productRouter.delete("/:productID", deleteProduct)
 
 productRouter.put("/:productID", updateProduct)
+
+productRouter.post("/:productID/reviews", addReview)
+
+productRouter.get("/:productID/reviews/admin", getReviewsAdmin)
+
+productRouter.patch("/:productID/reviews/:reviewID/approve", approveReview)
+
+productRouter.delete("/:productID/reviews/:reviewID", deleteReview)
 
 export default productRouter

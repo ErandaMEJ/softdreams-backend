@@ -1,5 +1,28 @@
 import mongoose from "mongoose";
 
+const reviewSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        rating: {
+            type: Number,
+            required: true,
+        },
+        comment: {
+            type: String,
+            required: true,
+        },
+        isApproved: {
+            type: Boolean,
+            default: false,
+        },
+
+    },
+    { timestamps: true }
+);
+
 const productSchema = new mongoose.Schema(
     {
         productID : {
@@ -53,8 +76,21 @@ const productSchema = new mongoose.Schema(
         isAvailable : {
             type : Boolean,
             required : true,
-        }
-    }
+        },
+        // ⭐ Reviews + rating fields
+        reviews: [reviewSchema],
+        rating: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        numReviews: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+    },
+    { timestamps: true }
 )
 const Product = mongoose.model("Product", productSchema)
 
