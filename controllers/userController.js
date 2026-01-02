@@ -127,6 +127,7 @@ export function getUser(req, res) {
     res.json(req.user)
 }
 
+
 export async function googleLogin(req, res) {
 
     console.log(req.body.token);
