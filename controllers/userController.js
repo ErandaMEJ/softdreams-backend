@@ -145,14 +145,11 @@ export function getUser(req, res) {
 
 export async function googleLogin(req, res) {
 
-    console.log(req.body.token);
     try {
-        const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo",
-            {
-                headers: {
-                    Authorization: `Bearer ${req.body.token}`
-                }
-            });
+        // Verify the Google ID token (credential) using Google's tokeninfo endpoint
+        const response = await axios.get(
+            `https://oauth2.googleapis.com/tokeninfo?id_token=${req.body.token}`
+        );
 
         console.log(response.data);
 
