@@ -25,24 +25,32 @@ export function createUser(req, res) {
 
     const hashedpassword = bcrypt.hashSync(data.password, 10)
 
-
-
-    const user = new User(
-        {
-            email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            password: hashedpassword,
-
-
-        }
-    );
+    const user = new User({
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: hashedpassword,
+        role: "customer", // Force default role to customer for security
+    });
 
     user.save().then(
         () => {
             res.json({
                 message: "User Created Successfully"
             })
+        }
+    ).catch(
+        (error) => {
+            if (error.code === 11000) {
+                res.status(400).json({
+                    message: "Email already exists"
+                })
+            } else {
+                res.status(500).json({
+                    message: "Error creating user",
+                    error: error.message
+                })
+            }
         }
     )
 }
@@ -102,6 +110,13 @@ export function loginUser(req, res) {
 
                 }
             }
+        }
+    ).catch(
+        (error) => {
+            res.status(500).json({
+                message: "Error during login",
+                error: error.message
+            })
         }
     )
 }
@@ -170,7 +185,7 @@ export async function googleLogin(req, res) {
             res.json({
                 message: "Login Successful",
                 token: token,
-                role: user.role
+                role: newUser.role
 
             })
 
@@ -330,6 +345,7 @@ export async function updateUserStatus(req, res) {
     if (!isAdmin(req)) {
         res.status(401).json({
             message: "Unauthorized",
+
         });
         return;
     }

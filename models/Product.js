@@ -25,57 +25,57 @@ const reviewSchema = new mongoose.Schema(
 
 const productSchema = new mongoose.Schema(
     {
-        productID : {
-            type : String,
-            required : true,
-            unique : true
+        productID: {
+            type: String,
+            required: true,
+            unique: true
         },
-        name : {
-            type : String,
-            required : true
+        name: {
+            type: String,
+            required: true
         },
-        altNames : {
-            type : [String],
-            default : []
+        altNames: {
+            type: [String],
+            default: []
         },
-        description : {
-            type : String,
-            required : true
+        description: {
+            type: String,
+            required: true
         },
-        price : {
-            type : Number,
-            required : true
+        price: {
+            type: Number,
+            required: true
         },
-        labelledPrice : {
-            type : Number,
-            required : true
+        labelledPrice: {
+            type: Number,
+            required: true
         },
-        images : {
-            type : [String],
-            required : true
+        images: {
+            type: [String],
+            required: true
         },
-        category : {
-            type : String,
-            required : true        
-        },        
-        model : {
-            type : String,
-            required : true,
-            default : "Standard"
+        category: {
+            type: String,
+            required: true
         },
-        brand : {
-            type : String,
-            required : true,
-            default : "Generic"
+        model: {
+            type: String,
+            required: true,
+            default: "Standard"
         },
-        stock : {
-            type : Number,
-            required : true,
-            default : 0
+        brand: {
+            type: String,
+            required: true,
+            default: "Generic"
         },
-        isAvailable : {
-            type : Boolean,
-            default : true,
+        stock: {
+            type: Number,
+            required: true,
+            default: 0
+        },
+        isAvailable: {
+            type: Boolean,
+            default: true,
         },
         // ⭐ Reviews + rating fields
         reviews: [reviewSchema],

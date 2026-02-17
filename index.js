@@ -81,14 +81,20 @@ app.use((req, res, next) => {
 
 // Health Check Route
 app.get('/ping', (req, res) => {
-  res.send('Pong! Server is awake.');
+    res.send('Pong! Server is awake.');
 });
 
 
 // routes
 app.use("/api/users", userRouter)
 app.use("/api/products", productRouter)
+// import analyticsRouter from "./routes/analyticsRouter.js"; // DO NOT ENABLE - CAUSES CRASH
+
+app.use("/api/users", userRouter)
+app.use("/api/products", productRouter)
 app.use("/api/orders", orderRouter)
+// app.use("/api/analytics", analyticsRouter) // DO NOT ENABLE - CAUSES CRASH
+// Server restart trigger
 
 
 
