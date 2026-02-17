@@ -91,7 +91,17 @@ app.use("/api/products", productRouter)
 app.use("/api/orders", orderRouter)
 
 // server
+// server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+
+if (process.env.VITE_BACKEND_URL) {
+    // Vercel environment
+    module.exports = app;
+} else {
+    // Local environment
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+export default app;
