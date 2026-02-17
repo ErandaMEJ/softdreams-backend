@@ -88,21 +88,10 @@ app.get('/ping', (req, res) => {
 // routes
 app.use("/api/users", userRouter)
 app.use("/api/products", productRouter)
-// import analyticsRouter from "./routes/analyticsRouter.js"; // DO NOT ENABLE - CAUSES CRASH
-
-app.use("/api/users", userRouter)
-app.use("/api/products", productRouter)
 app.use("/api/orders", orderRouter)
-// app.use("/api/analytics", analyticsRouter) // DO NOT ENABLE - CAUSES CRASH
-// Server restart trigger
-
-
-
-
 
 // server
-app.listen(5000,
-    () => {
-        console.log("server is running")
-    }
-)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
